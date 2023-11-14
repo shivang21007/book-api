@@ -113,8 +113,6 @@ func returnBook(c *gin.Context) {
 	})
 }
 
-
-
 // Main function
 func main(){
 	router := gin.Default()
@@ -126,7 +124,7 @@ func main(){
 	router.GET("/books/:id", bookbyId) 
 
 	router.POST("/books", createBook)
-	
+
 	router.PATCH("/checkout", checkoutBook) 
 	// http://localhost:8080/checkout?id=2
 	router.PATCH("/return", returnBook)
