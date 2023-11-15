@@ -86,6 +86,28 @@ func getBookById(id string) (*book, error){
 	return nil, errors.New("book not found")
 }
 
+// Update an existing book by its ID
+func updateBookById(c *gin.Context) {
+	id := c.Param("id")
+
+	// Find the book using the getBookById helper function
+	book, err := getBookById(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Book not found."})
+		return
+	}
+
+	// Bind the JSON data from the request body to the existing book
+	if err := c.BindJSON(&book); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
+		return
+	}
+
+	// Respond with a JSON message indicating that the book was successfully updated
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Book is Successfully Updated", "updated_book": book})
+}
+
+
 // checkout book by its ID
 func checkoutBook(c *gin.Context){
 	id, ok := c.GetQuery("id")
@@ -148,6 +170,8 @@ func main(){
 	router.GET("/books/:id", bookbyId) 
 
 	router.POST("/books", createBook)
+
+	router.PUT("/books/:id", updateBookById)
 
 	router.PATCH("/checkout", checkoutBook) 
 	// http://localhost:8080/checkout?id=2
