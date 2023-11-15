@@ -34,8 +34,32 @@ func createBook(c *gin.Context) {
 		return
 	}
 
+	// Check if a book with the same ID already exists
+	if _, err := getBookById(newBook.Id); err == nil {
+		// Book with the same ID exists, respond with a message
+		c.IndentedJSON(http.StatusConflict, gin.H{"message": "Book with the same ID already exists. Please new Book with new Fields or Update it."})
+		return
+	}
+
+	// Check if a book with the same Title already exists
+	if bookExistsByTitle(newBook.Title) {
+		// Book with the same ID exists, respond with a message
+		c.IndentedJSON(http.StatusConflict, gin.H{"message": "Book with the same Title already exists. Please Try to Update it, if it is required."})
+		return
+	}
+
 	books = append(books, newBook)
 	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Book is Successfully Created.", "Created-Book": newBook})
+}
+
+// (helper func) check if a book with the same title already exists
+func bookExistsByTitle(title string) bool {
+	for _, b := range books {
+		if b.Title == title {
+			return true
+		}
+	}
+	return false
 }
 
 
@@ -130,4 +154,4 @@ func main(){
 	router.PATCH("/return", returnBook)
 	// http://localhost:8080/return?id=2
 	router.Run("localhost:8080")
-};
+}
