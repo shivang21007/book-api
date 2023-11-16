@@ -107,6 +107,41 @@ func updateBookById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Book is Successfully Updated", "updated_book": book})
 }
 
+// Delete any book by its ID
+func deletebyId(c *gin.Context) {
+	id := c.Param("id")
+
+	// Find the book using the getBookById helper function
+	book, err := getBookById(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Book not found."})
+		return
+	}
+
+	// Get the index of the book in the 'books' slice
+	index, err := getIndexById(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error finding book index."})
+		return
+	}
+
+	// Remove the book from the 'books' slice
+	books = append(books[:index], books[index+1:]...)
+
+	// Respond with a JSON message indicating that the book was successfully deleted
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Book is Successfully Deleted", "deleted_book": book})
+}
+
+// (helper func) find the index of any book by giving its ID
+func getIndexById(id string) (int, error) {
+	for i, b := range books {
+		if b.Id == id {
+			return i, nil
+		}
+	}
+	return -1, errors.New("book not found")
+}
+
 
 // checkout book by its ID
 func checkoutBook(c *gin.Context){
@@ -172,6 +207,8 @@ func main(){
 	router.POST("/books", createBook)
 
 	router.PUT("/books/:id", updateBookById)
+
+	router.DELETE("/books/:id",deletebyId)
 
 	router.PATCH("/checkout", checkoutBook) 
 	// http://localhost:8080/checkout?id=2
