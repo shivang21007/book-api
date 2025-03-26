@@ -71,7 +71,6 @@ func createBook(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Book is Successfully Created.", "Created-Book": newBook})
 }
 
-
 // (helper func) check if a book with the same title already exists
 func bookExistsByTitle(title string) bool {
 	for _, b := range books {
@@ -129,7 +128,6 @@ func updateBookById(c *gin.Context) {
 	// Respond with a JSON message indicating that the book was successfully updated
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Book is Successfully Updated", "updated_book": book})
 }
-
 
 // Delete any book by its ID
 func deletebyId(c *gin.Context) {
@@ -234,7 +232,6 @@ func returnBook(c *gin.Context) {
 	})
 }
 
-
 // Main function
 func main() {
 	router := gin.Default()
@@ -255,5 +252,5 @@ func main() {
 	// http://localhost:8080/checkout?id=2
 	router.PATCH("/return", returnBook)
 	// http://localhost:8080/return?id=2
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
