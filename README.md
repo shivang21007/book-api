@@ -47,6 +47,21 @@ go run main.go
 
 The server will start on `http://localhost:8080`
 
+## Running with Docker
+
+The application is available as a Docker image on Docker Hub. You can run it using:
+
+```bash
+docker run -it -p 8080:8080 shivang21007/book-api:v1.0
+```
+
+This command will:
+- Pull the image from Docker Hub
+- Run it in interactive mode (-it)
+- Map port 8080 from the container to port 8080 on your host machine (-p 8080:8080)
+
+The API will be accessible at `http://localhost:8080`
+
 ## API Endpoints
 
 ### 1. Get All Books
@@ -156,8 +171,6 @@ curl -X PATCH "http://localhost:8080/checkout?id=1"
 ```bash
 curl -X PATCH "http://localhost:8080/return?id=1"
 ```
-
-
 
 ## Error Handling
 
